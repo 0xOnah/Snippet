@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/julienschmidt/httprouter"
-	"github.com/justinas/alice"
+	chain "github.com/justinas/alice"
 )
 
 func (app *application) routes() http.Handler {
@@ -18,7 +18,7 @@ func (app *application) routes() http.Handler {
 	fileServer := http.FileServer(http.Dir("./ui/static/"))
 	router.Handler(http.MethodGet, "/static/*filepath", http.StripPrefix("/static", fileServer))
 
-	dynamic := alice.New(app.sessionManager.LoadAndSave)
+	dynamic := chain.New(app.sessionManager.LoadAndSave)
 
 	router.Handler(http.MethodGet, "/", dynamic.ThenFunc(app.home))
 	router.Handler(http.MethodGet, "/snippet/view/:id", dynamic.ThenFunc(app.snippetView))
@@ -28,6 +28,6 @@ func (app *application) routes() http.Handler {
 	// "/static" prefix before the request reaches the file server.
 
 	// return app.recoverPanic(app.logRequest(secureHeaders(router)))
-	standard := alice.New(app.recoverPanic, app.logRequest, secureHeaders)
+	standard := chain.New(app.recoverPanic, app.logRequest, secureHeaders)
 	return standard.Then(router)
 }

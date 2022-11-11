@@ -7,8 +7,6 @@ import (
 	"net/http"
 	"runtime/debug"
 	"time"
-
-	"github.com/go-playground/form"
 )
 
 func (app *application) serverError(w http.ResponseWriter, err error) {
@@ -62,14 +60,13 @@ func (app *application) decodePostForm(r *http.Request, dst any) error {
 		return err
 	}
 
+	var errDecode = errors.New("schema: interface must be a pointer to struct")
 	err = app.formDecoder.Decode(dst, r.PostForm)
 	if err != nil {
-		var invalidDecoderError *form.InvalidDecoderError
-
-		if errors.As(err, &invalidDecoderError) {
+		fmt.Println(err)
+		if err.Error() == errDecode.Error() {
 			panic(err)
 		}
-
 		return err
 	}
 	return nil

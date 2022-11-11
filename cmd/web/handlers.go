@@ -20,6 +20,7 @@ type snippetCreateForm struct {
 
 // / GET ALL
 func (app *application) home(w http.ResponseWriter, r *http.Request) {
+
 	snippets, err := app.snippets.Latest()
 	if err != nil {
 		app.serverError(w, err)
@@ -55,7 +56,6 @@ func (app *application) snippetView(w http.ResponseWriter, r *http.Request) {
 
 	data := app.newTemplateData(r)
 	data.Snippet = snippet
-
 	app.render(w, http.StatusOK, "view.html", data)
 
 }
@@ -65,15 +65,9 @@ func (app *application) snippetCreatePost(w http.ResponseWriter, r *http.Request
 	// Limit the request body size to 4096 bytes
 	// r.Body = http.MaxBytesReader(w, r.Body, 4096)\
 
-	err := r.ParseForm()
-	if err != nil {
-		app.clientError(w, http.StatusBadRequest)
-		return
-	}
-
 	var form snippetCreateForm
 
-	err = app.decodePostForm(r, &form)
+	err := app.decodePostForm(r, &form)
 	if err != nil {
 		app.clientError(w, http.StatusBadRequest)
 		return

@@ -16,6 +16,7 @@ import (
 	"github.com/onahvictor/Snippetbox/internal/models"
 )
 
+//dependency injection
 type application struct {
 	errorLog       *log.Logger
 	infoLog        *log.Logger

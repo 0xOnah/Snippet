@@ -28,7 +28,7 @@ func (app *application) home(w http.ResponseWriter, r *http.Request) {
 	}
 
 	data := app.newTemplateData(r)
-	data.Snippets = snippets
+	data.Snippets = snippets 
 
 	app.render(w, http.StatusOK, "home.html", data)
 

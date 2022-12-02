@@ -75,7 +75,7 @@ func main() {
 		Handler:   app.routes(),
 		TLSConfig: tlsConfig,
 		IdleTimeout: time.Minute,
-		ReadTimeout: 5 * time.Second,
+		ReadTimeout: 5 * time.Second, // prevent attacks like Slowloris
 		WriteTimeout: 10 * time.Second,
 	}
 

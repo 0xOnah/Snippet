@@ -65,7 +65,7 @@ func (app *application) decodePostForm(r *http.Request, dst any) error {
 	if err != nil {
 		fmt.Println(err)
 		if err.Error() == errDecode.Error() {
-			panic(err)
+			panic(errDecode.Error())
 		}
 		return err
 	}

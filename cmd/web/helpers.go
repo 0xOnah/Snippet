@@ -63,7 +63,6 @@ func (app *application) decodePostForm(r *http.Request, dst any) error {
 	var errDecode = errors.New("schema: interface must be a pointer to struct")
 	err = app.formDecoder.Decode(dst, r.PostForm)
 	if err != nil {
-		fmt.Println(err)
 		if err.Error() == errDecode.Error() {
 			panic(errDecode.Error())
 		}

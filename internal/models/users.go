@@ -22,6 +22,7 @@ type UserModel struct {
 	DB *sql.DB
 }
 
+// creates a new record for a user in our database while also checking that the email doesn't exist before in our database.
 func (m *UserModel) Insert(name, email, password string) error {
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), 12)
 	if err != nil {
@@ -32,7 +33,6 @@ func (m *UserModel) Insert(name, email, password string) error {
 	VALUES(?, ?, ?, UTC_TIMESTAMP())`
 
 	_, err = m.DB.Exec(stmt, name, email, string(hashedPassword))
-
 	if err != nil {
 		var mySQLError *mysql.MySQLError
 		if errors.As(err, &mySQLError) {
@@ -45,8 +45,35 @@ func (m *UserModel) Insert(name, email, password string) error {
 	return nil
 }
 
-func (m *UserModel) Authenticate(email, password string) (int, error) {
-	return 0, nil
+//validates if the email submitted matches  a record in our database and if does check if the password submitted matches
+func (m *UserModel) Authenticate(email, password string ) (int, error) {
+
+	var id int
+	var hashedPassword []byte
+
+	stmt := "SELECT id, hashed_password FROM users WHERE email = ?"
+
+	err := m.DB.QueryRow(stmt, email).Scan(&id, &hashedPassword)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return 0, ErrInvalidCredentials
+		} else {
+			return 0, err
+		}
+	}
+
+	err = bcrypt.CompareHashAndPassword(hashedPassword, []byte(password))
+	if err != nil{
+		if errors.Is(err, bcrypt.ErrMismatchedHashAndPassword){
+			return 0, ErrInvalidCredentials
+		}else {
+			return 0, err
+		}
+
+	}
+
+	return id, nil
+
 }
 
 func (m *UserModel) Exists(id int) (bool, error) {

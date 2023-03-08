@@ -219,9 +219,9 @@ func (app *application) userLoginPost(w http.ResponseWriter, r *http.Request) {
 }
 
 func (app *application) userLogoutPost(w http.ResponseWriter, r *http.Request) {
-	
-	err:= app.sessionManager.RenewToken(r.Context())
-	if err != nil{
+
+	err := app.sessionManager.RenewToken(r.Context())
+	if err != nil {
 		app.serverError(w, err)
 		return
 	}

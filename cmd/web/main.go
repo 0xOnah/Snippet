@@ -17,6 +17,7 @@ import (
 	"github.com/onahvictor/Snippetbox/internal/models"
 )
 
+// The application struct represent the service and holds all of its dependencies
 //dependency injection
 type application struct {
 	errorLog       *log.Logger
@@ -55,6 +56,9 @@ func main() {
 	sessionManager.Store = mysqlstore.New(db)
 	sessionManager.Lifetime = 12 * time.Hour
 	sessionManager.Cookie.Secure = true
+
+	//routine database checkup
+	dataDelete(db)
 
 	// Initialize a new instance of our application struct, containing the dependencies.
 	app := &application{
@@ -97,4 +101,24 @@ func openDB(dsn string) (*sql.DB, error) {
 		return nil, err
 	}
 	return db, nil
+}
+
+func dataDelete(db *sql.DB) {
+	// Launch the goroutine to periodically check for expired data
+	for {
+		go func() {
+			err := deleteExpiredData(db)
+			if err != nil {
+				panic(err)
+			}
+		}()
+		time.Sleep(time.Hour * 24)
+	}
+
+}
+
+func deleteExpiredData(db *sql.DB) error {
+	// Execute the DELETE statement to remove expired data
+	_, err := db.Exec("DELETE FROM snippets WHERE expires < UTC_TIMESTAMP()")
+	return err
 }

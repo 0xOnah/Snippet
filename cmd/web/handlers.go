@@ -7,8 +7,8 @@ import (
 	"strconv"
 
 	"github.com/julienschmidt/httprouter"
-	"github.com/onahvictor/Snippetbox/internal/models"
-	"github.com/onahvictor/Snippetbox/internal/validator"
+	"github.com/onahvictor/Snippet/internal/models"
+	"github.com/onahvictor/Snippet/internal/validator"
 )
 
 // to represent and hold snippetcreate form data
@@ -19,7 +19,7 @@ type snippetCreateForm struct {
 	validator.Validator `schema:"-"`
 }
 
-//to represent and hold signup form data
+// to represent and hold signup form data
 type userSignupForm struct {
 	Name                string `schema:"name"`
 	Email               string `schema:"email"`
@@ -27,7 +27,7 @@ type userSignupForm struct {
 	validator.Validator `schema:"-"`
 }
 
-//to represent and hold the login form data
+// to represent and hold the login form data
 type userLoginForm struct {
 	Email               string `schema:"email"`
 	Password            string `schema:"password"`
@@ -112,7 +112,7 @@ func (app *application) snippetCreatePost(w http.ResponseWriter, r *http.Request
 	http.Redirect(w, r, fmt.Sprintf("/snippet/view/%d", id), http.StatusSeeOther)
 }
 
-///snippet/create GET
+// /snippet/create GET
 func (app *application) snippetCreate(w http.ResponseWriter, r *http.Request) {
 	data := app.newTemplateData(r)
 	data.Form = snippetCreateForm{

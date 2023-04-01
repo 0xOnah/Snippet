@@ -5,7 +5,7 @@ import (
 	"path/filepath"
 	"time"
 
-	"github.com/onahvictor/Snippetbox/internal/models"
+	"github.com/onahvictor/Snippet/internal/models"
 )
 
 type templateData struct {

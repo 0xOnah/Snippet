@@ -44,7 +44,7 @@ func (m *UserModel) Insert(name, email, password string) error {
 	return nil
 }
 
-//validates if the email submitted matches  a record in our database and if does check if the password submitted matches
+// validates if the email submitted matches  a record in our database and if does check if the password submitted matches
 func (m *UserModel) Authenticate(email, password string) (int, error) {
 
 	var id int
@@ -75,7 +75,6 @@ func (m *UserModel) Authenticate(email, password string) (int, error) {
 
 }
 
-//checking that a user still exsist after the last sign in
 func (m *UserModel) Exists(id int) (bool, error) {
 	var exists bool
 

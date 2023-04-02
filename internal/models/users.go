@@ -4,19 +4,18 @@ import (
 	"database/sql"
 	"errors"
 	"strings"
-	"time"
 
 	"github.com/go-sql-driver/mysql"
 	"golang.org/x/crypto/bcrypt"
 )
 
-type user struct {
-	Id             int
-	Name           string
-	Email          string
-	HashedPassword []byte
-	Created        time.Time
-}
+// type User struct {
+// 	Id             int
+// 	Name           string
+// 	Email          string
+// 	HashedPassword []byte
+// 	Created        time.Time
+// }
 
 type UserModel struct {
 	DB *sql.DB
@@ -45,8 +44,8 @@ func (m *UserModel) Insert(name, email, password string) error {
 	return nil
 }
 
-//validates if the email submitted matches  a record in our database and if does check if the password submitted matches
-func (m *UserModel) Authenticate(email, password string ) (int, error) {
+// validates if the email submitted matches  a record in our database and if does check if the password submitted matches
+func (m *UserModel) Authenticate(email, password string) (int, error) {
 
 	var id int
 	var hashedPassword []byte
@@ -63,10 +62,10 @@ func (m *UserModel) Authenticate(email, password string ) (int, error) {
 	}
 
 	err = bcrypt.CompareHashAndPassword(hashedPassword, []byte(password))
-	if err != nil{
-		if errors.Is(err, bcrypt.ErrMismatchedHashAndPassword){
+	if err != nil {
+		if errors.Is(err, bcrypt.ErrMismatchedHashAndPassword) {
 			return 0, ErrInvalidCredentials
-		}else {
+		} else {
 			return 0, err
 		}
 
@@ -76,6 +75,12 @@ func (m *UserModel) Authenticate(email, password string ) (int, error) {
 
 }
 
+// checking that a user still exsist after the last sign in
 func (m *UserModel) Exists(id int) (bool, error) {
-	return false, nil
+	var exists bool
+
+	stmt := "SELECT EXISTS(SELECT true FROM users WHERE id = ?)"
+
+	err := m.DB.QueryRow(stmt, id).Scan(&exists)
+	return exists, err
 }

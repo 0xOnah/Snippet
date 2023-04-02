@@ -19,7 +19,7 @@ func (app *application) routes() http.Handler {
 	// "/static" prefix before the request reaches the file server.
 	router.Handler(http.MethodGet, "/static/*filepath", http.StripPrefix("/static", fileServer))
 
-	dynamic := chain.New(app.sessionManager.LoadAndSave, noSurf)
+	dynamic := chain.New(app.sessionManager.LoadAndSave, app.authenticate)
 
 	router.Handler(http.MethodGet, "/", dynamic.ThenFunc(app.home))
 	router.Handler(http.MethodGet, "/snippet/view/:id", dynamic.ThenFunc(app.snippetView))

@@ -19,7 +19,7 @@ type snippetCreateForm struct {
 	validator.Validator `schema:"-"`
 }
 
-//to represent and hold signup form data
+// to represent and hold signup form data
 type userSignupForm struct {
 	Name                string `schema:"name"`
 	Email               string `schema:"email"`
@@ -27,7 +27,7 @@ type userSignupForm struct {
 	validator.Validator `schema:"-"`
 }
 
-//to represent and hold the login form data
+// to represent and hold the login form data
 type userLoginForm struct {
 	Email               string `schema:"email"`
 	Password            string `schema:"password"`
@@ -112,7 +112,7 @@ func (app *application) snippetCreatePost(w http.ResponseWriter, r *http.Request
 	http.Redirect(w, r, fmt.Sprintf("/snippet/view/%d", id), http.StatusSeeOther)
 }
 
-///snippet/create GET
+// /snippet/create GET
 func (app *application) snippetCreate(w http.ResponseWriter, r *http.Request) {
 	data := app.newTemplateData(r)
 	data.Form = snippetCreateForm{
@@ -219,9 +219,9 @@ func (app *application) userLoginPost(w http.ResponseWriter, r *http.Request) {
 }
 
 func (app *application) userLogoutPost(w http.ResponseWriter, r *http.Request) {
-	
-	err:= app.sessionManager.RenewToken(r.Context())
-	if err != nil{
+
+	err := app.sessionManager.RenewToken(r.Context())
+	if err != nil {
 		app.serverError(w, err)
 		return
 	}

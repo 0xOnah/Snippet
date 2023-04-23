@@ -42,7 +42,7 @@ func newTemplateCache() (map[string]*template.Template, error) {
 		//extracts the file name from the full path
 		name := filepath.Base(page)
 
-		temp := template.New(name).Funcs(functions)
+		temp := template.New(name).Funcs(functions) 
 		temp, err := temp.ParseFiles("./ui/html/base.html")
 		if err != nil {
 			return nil, err
